@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "slug": "kanboard",
     "description": "Kanban project management software",
-    "url": "https://github.com/your-username/kanboard-addon",
+    "url": "https://github.com/Dodoooh/HASS-Kanboard",
     "startup": "before_all",
     "boot": "auto",
     "options": {},
     "schema": {},
     "arch": ["armhf", "armv7", "amd64", "aarch64"],
-    "image": "kanboard/kanboard:latest"
+    "image": "kanboard/kanboard"
 }
