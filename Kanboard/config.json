@@ -13,10 +13,6 @@
     "i386"
   ],
   "ingress": true,
-  "map": [
-    "config:rw",
-    "data:rw"
-  ],
   "ports": {
     "80/tcp": 8080
   },
