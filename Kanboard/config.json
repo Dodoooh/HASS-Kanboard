@@ -1,23 +1,29 @@
 {
-  "name": "Kanboard",
-  "version": "1.2.32",
-  "slug": "kanboard",
-  "description": "Kanboard is a simple visual task board software.",
-  "startup": "before",
-  "image": "kanboard/kanboard",
   "arch": [
     "aarch64",
-    "amd64",
-    "armhf",
-    "armv7",
-    "i386"
+    "amd64"
   ],
-  "ingress": true,
+  "description": "Kanboard is a simple visual task board software.",
+  "devices": [],
+  "environment": {},
+  "image": "kanboard/kanboard:1.2.32",
+  "init": false,
+  "map": [
+    "config:rw",
+    "data:rw"
+  ],
+  "name": "Kanboard",
+  "options": {},
   "ports": {
     "80/tcp": 8080
   },
-  "options": {},
+  "ports_description": {
+    "80/tcp": "web interface"
+  },
+  "privileged": [],
   "schema": {},
-  "boot": "auto",
-  "timeout": 300
+  "slug": "kanboard",
+  "url": "https://github.com/Dodoooh/HASS-Kanboard/tree/main/Kanboard",
+  "version": "1.2.32",
+  "webui": "http://[HOST]:[PORT:80]"
 }
