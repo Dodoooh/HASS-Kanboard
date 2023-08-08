@@ -1,29 +1,13 @@
 {
-  "arch": [
-    "aarch64",
-    "amd64"
-  ],
-  "description": "Kanboard is a simple visual task board software.",
-  "devices": [],
-  "environment": {},
-  "image": "kanboard/kanboard:1.2.32",
-  "init": false,
-  "map": [
-    "config:rw",
-    "data:rw"
-  ],
-  "name": "Kanboard",
-  "options": {},
-  "ports": {
-    "80/tcp": 8080
-  },
-  "ports_description": {
-    "80/tcp": "web interface"
-  },
-  "privileged": [],
-  "schema": {},
-  "slug": "kanboard",
-  "url": "https://github.com/Dodoooh/HASS-Kanboard/tree/main/Kanboard",
-  "version": "1.2.32",
-  "webui": "http://[HOST]:[PORT:80]"
+    "name": "Kanboard",
+    "version": "1.0.0",
+    "slug": "kanboard",
+    "description": "Kanban project management software",
+    "url": "https://github.com/your-username/kanboard-addon",
+    "startup": "before_all",
+    "boot": "auto",
+    "options": {},
+    "schema": {},
+    "arch": ["armhf", "armv7", "amd64", "aarch64"],
+    "image": "kanboard/kanboard:latest"
 }
