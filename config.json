@@ -1,0 +1,10 @@
+{
+  "name": "Kanboard Add-On",
+  "version": "1.0.0",
+  "slug": "kanboard-addon",
+  "description": "Home Assistant Add-On for kanboard/kanboard Docker application.",
+  "startup": "before",
+  "docker_image": "kanboard/kanboard",
+  "arch": ["amd64"],
+  "homeassistant": true
+}
