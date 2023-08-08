@@ -4,7 +4,7 @@
   "slug": "kanboard-addon",
   "description": "Home Assistant Add-On for kanboard/kanboard Docker application.",
   "startup": "before",
-  "image": "kanboard/kanboard:1.2.32",
+  "image": "kanboard/kanboard",
   "arch": ["amd64"],
   "homeassistant": true
 }
