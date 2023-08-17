@@ -1,34 +1,17 @@
 {
   "name": "Kanboard",
   "version": "1.0.0",
-  "panel_icon": "mdi:clipboard-check",
-  "panel_title": "Kanboard",
   "slug": "kanboard",
-  "description": "Visual project management software",
-  "url": "https://github.com/kanboard/kanboard",
-  "image": "docker.io/kanboard/kanboard",
-  "startup": "application",
+  "description": "Run Kanboard with SSL support",
+  "startup": "before",
   "boot": "auto",
-  "init": false,
-  "webui": "http://[HOST]:[PORT:80]/",
-  "ingress": true,
-  "ingress_port": 80,
-  "ingress_entry": "/",
-  "panel_admin": false,
-  "homeassistant_api": true,
-  "hassio_api": true,
-  "ports": {
-    "80/tcp": 80
-  },
-  "host_network": false,
-  "usb": false,
-  "video": false,
-  "tmpfs": false,
-  "full_access": false,
-  "privileged": [],
-  "environment": [
-    "DEBUG=false"
-  ],
-  "arch": ["amd64", "arm64", "arm/v7", "arm/v6"],
-  "map": []
+  "port": 80,
+  "ssl": true,
+  "map": [
+    {
+      "host": "kanboard.local",
+      "port": 443,
+      "ssl": true
+    }
+  ]
 }
