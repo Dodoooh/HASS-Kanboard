@@ -6,7 +6,7 @@
   ],
   "codenotary": "alexandrep.github@gmail.com",
   "description": "Open source password management solution",
-  "image": "ghcr.io/kanboard/kanboard-{arch}",
+  "image": "ghcr.io/kanboard/kanboard",
   "init": false,
   "map": [
     "ssl"
