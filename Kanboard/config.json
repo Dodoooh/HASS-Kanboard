@@ -1,16 +1,12 @@
-{
-  "name": "Kanboard Add-on",
-  "version": "1.0.0",
-  "slug": "kanboard",
-  "description": "Run Kanboard with SSL support",
-  "url": "https://github.com/yourusername/kanboard-addon",
-  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
-  "init": false,
-  "map": [
-    {
-      "share": "rw"
-    }
-  ],
-  "schema": {},
-  "image": "kanboard/kanboard:latest"
-}
+name: "Hello world"
+description: "My first real add-on!"
+version: "1.0.0"
+slug: "hello_world"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+image: "kanboard/kanboard:latest"
