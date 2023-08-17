@@ -16,7 +16,7 @@
 
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:5.2.2
 ARG BUILD_VERSION
-ARG BUILD_UPSTREAM="1.29.1"
+ARG BUILD_UPSTREAM="1.2.32"
 FROM "kanboard/kanboard:${BUILD_UPSTREAM}" as kanboard
 FROM ${BUILD_FROM}
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
