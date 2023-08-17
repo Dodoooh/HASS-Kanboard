@@ -17,14 +17,14 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:5.2.2
 ARG BUILD_VERSION
 ARG BUILD_UPSTREAM="1.29.1"
-FROM "kanboard/kanboard:${BUILD_UPSTREAM}" as kanboard
+FROM "vaultwarden/server:${BUILD_UPSTREAM}" as vaultwarden
 FROM ${BUILD_FROM}
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Get the Bitwarden from official images
-COPY --from=kanboard /kanboard /opt/kanboard
-#COPY --from=kanboard /Rocket.toml /opt/Rocket.toml
-COPY --from=kanboard /web-vault /opt/web-vault
+COPY --from=vaultwarden /vaultwarden /opt/vaultwarden
+#COPY --from=vaultwarden /Rocket.toml /opt/Rocket.toml
+COPY --from=vaultwarden /web-vault /opt/web-vault
 
 ##################
 # 2 Modify Image #
