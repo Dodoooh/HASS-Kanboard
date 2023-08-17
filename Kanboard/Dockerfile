@@ -1,12 +1,19 @@
+# https://developers.home-assistant.io/docs/add-ons/configuration#add-on-dockerfile
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-# Set up the necessary environment variables
+# Set up environment variables if needed
+ENV LANG C.UTF-8
 
-# Install packages if needed
+# Install any additional packages if required
+# RUN apk add --no-cache package-name
 
-# Copy the Docker Compose configuration and other files
+# Execute during the build of the image
+ARG TEMPIO_VERSION BUILD_ARCH
+RUN \
+    curl -sSLf -o /usr/bin/tempio \
+    "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${BUILD_ARCH}" && \
+    chmod a+x /usr/bin/tempio
 
-# Set the working directory
-
-# Run the entry command (e.g., docker-compose up)
+# Copy root filesystem
+COPY rootfs /

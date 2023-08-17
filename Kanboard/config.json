@@ -1,17 +1,16 @@
 {
-  "name": "Kanboard",
+  "name": "Kanboard Add-on",
   "version": "1.0.0",
   "slug": "kanboard",
   "description": "Run Kanboard with SSL support",
-  "startup": "before",
-  "boot": "auto",
-  "port": 80,
-  "ssl": true,
+  "url": "https://github.com/yourusername/kanboard-addon",
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+  "init": false,
   "map": [
     {
-      "host": "kanboard.local",
-      "port": 443,
-      "ssl": true
+      "share": "rw"
     }
-  ]
+  ],
+  "schema": {},
+  "image": "kanboard/kanboard:latest"
 }
