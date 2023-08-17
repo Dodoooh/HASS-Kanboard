@@ -6,22 +6,22 @@
   ],
   "codenotary": "alexandrep.github@gmail.com",
   "description": "Open source password management solution",
-  "image": "ghcr.io/alexbelgium/vaultwarden-{arch}",
+  "image": "ghcr.io/kanboard/kanboard-{arch}",
   "init": false,
   "map": [
     "ssl"
   ],
-  "name": "Vaultwarden (Bitwarden)",
+  "name": "KanBoard (Kanboard)",
   "options": {
     "certfile": "fullchain.pem",
     "keyfile": "privkey.pem",
     "ssl": true
   },
   "ports": {
-    "7277/tcp": 7277
+    "80/tcp": 80
   },
   "ports_description": {
-    "7277/tcp": "Bitwarden Vault"
+    "80/tcp": "Bitwarden Vault"
   },
   "schema": {
     "certfile": "str",
@@ -33,5 +33,5 @@
   "slug": "bitwarden",
   "url": "https://github.com/alexbelgium/hassio-addons/tree/master/bitwarden",
   "version": "1.29.1",
-  "webui": "[PROTO:ssl]://[HOST]:[PORT:7277]"
+  "webui": "[PROTO:ssl]://[HOST]:[PORT:80]"
 }
