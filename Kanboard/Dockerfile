@@ -1,129 +1,34 @@
-#============================#
-#  ALEXBELGIUM'S DOCKERFILE  #
-#============================#
-#           _.------.
-#       _.-`    ('>.-`"""-.
-# '.--'`       _'`   _ .--.)
-#    -'         '-.-';`   `
-#    ' -      _.'  ``'--.
-#        '---`    .-'""`
-#               /`
-#=== Home Assistant Addon ===#
+FROM alpine:3.18
 
-#################
-# 1 Build Image #
-#################
+LABEL org.opencontainers.image.source https://github.com/kanboard/kanboard
+LABEL org.opencontainers.image.title=Kanboard
+LABEL org.opencontainers.image.description="Kanboard is project management software that focuses on the Kanban methodology"
+LABEL org.opencontainers.image.vendor=Kanboard
+LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.url=https://kanboard.org
+LABEL org.opencontainers.image.documentation=https://docs.kanboard.org
 
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:5.2.2
-ARG BUILD_VERSION
-ARG BUILD_UPSTREAM="latest"
-FROM "kanboard/kanboard:${BUILD_UPSTREAM}" as kanboard
-FROM ${BUILD_FROM}
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+VOLUME /var/www/app/data
+VOLUME /var/www/app/plugins
+VOLUME /etc/nginx/ssl
 
-# Get the Bitwarden from official images
-COPY --from=kanboard /kanboard /opt/kanboard
-#COPY --from=kanboard /Rocket.toml /opt/Rocket.toml
-COPY --from=kanboard /web-vault /opt/web-vault
+EXPOSE 80 443
 
-##################
-# 2 Modify Image #
-##################
+ARG VERSION
 
-# Set S6 wait time
-ENV S6_CMD_WAIT_FOR_SERVICES=1 \
-    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
-    S6_SERVICES_GRACETIME=0
+RUN apk --no-cache --update add \
+    tzdata openssl unzip nginx bash ca-certificates s6 curl ssmtp mailx php82 php82-phar php82-curl \
+    php82-fpm php82-json php82-zlib php82-xml php82-dom php82-ctype php82-opcache php82-zip php82-iconv \
+    php82-pdo php82-pdo_mysql php82-pdo_sqlite php82-pdo_pgsql php82-mbstring php82-session php82-bcmath \
+    php82-gd php82-openssl php82-sockets php82-posix php82-ldap php82-simplexml && \
+    rm -rf /var/www/localhost && \
+    rm -f /etc/php82/php-fpm.d/www.conf && \
+    ln -s /usr/bin/php82 /usr/bin/php
 
-##################
-# 3 Install apps #
-##################
+ADD . /var/www/app
+ADD docker/ /
 
-# Add rootfs
-COPY rootfs/ /
+RUN rm -rf /var/www/app/docker && echo $VERSION > /var/www/app/app/version.txt
 
-# Corrects permissions for s6 v3
-RUN if [ -d /etc/cont-init.d ]; then chmod -R 755 /etc/cont-init.d; fi && \
-    if [ -d /etc/services.d ]; then chmod -R 755 /etc/services.d; fi && \
-    if [ -f /entrypoint.sh ]; then chmod 755 /entrypoint.sh; fi
-
-# Modules
-ARG MODULES="00-banner.sh 01-custom_script.sh"
-
-# Automatic modules download
-RUN if ! command -v bash >/dev/null 2>/dev/null; then (apt-get update && apt-get install -yqq --no-install-recommends bash || apk add --no-cache bash) >/dev/null; fi \
-    && if ! command -v curl >/dev/null 2>/dev/null; then (apt-get update && apt-get install -yqq --no-install-recommends curl || apk add --no-cache curl) >/dev/null; fi \
-    && apt-get update && apt-get install -yqq --no-install-recommends ca-certificates || apk add --no-cache ca-certificates >/dev/null || true \
-    && mkdir -p /etc/cont-init.d \
-    && for scripts in $MODULES; do echo "$scripts" && curl -f -L -s -S "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/$scripts" -o /etc/cont-init.d/"$scripts" && [ "$(sed -n '/\/bin/p;q' /etc/cont-init.d/"$scripts")" != "" ] || (echo "script failed to install $scripts" && exit 1); done \
-    && chmod -R 755 /etc/cont-init.d
-
-# Manual apps
-ENV PACKAGES="libmariadb-dev-compat \
-    libpq5 \
-    nginx \
-    sqlite3"
-
-# Automatic apps & bashio
-# hadolint ignore=SC2015
-RUN if ! command -v bash >/dev/null 2>/dev/null; then (apt-get update && apt-get install -yqq --no-install-recommends bash || apk add --no-cache bash) >/dev/null; fi \
-    && if ! command -v curl >/dev/null 2>/dev/null; then (apt-get update && apt-get install -yqq --no-install-recommends curl || apk add --no-cache curl) >/dev/null; fi \
-    && curl -f -L -s -S "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/automatic_packages.sh" --output /automatic_packages.sh \
-    && chmod 777 /automatic_packages.sh \
-    && eval /./automatic_packages.sh "${PACKAGES:-}" \
-    && rm /automatic_packages.sh
-
-################
-# 4 Entrypoint #
-################
-
-RUN chmod 777 /etc/services.d/*/*
-
-#RUN chmod 777 /entrypoint.sh
-#WORKDIR /
-#ENTRYPOINT [ "/usr/bin/env" ]
-#CMD [ "/entrypoint.sh" ]
-#SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-############
-# 5 Labels #
-############
-
-ARG BUILD_ARCH
-ARG BUILD_DATE
-ARG BUILD_DESCRIPTION
-ARG BUILD_NAME
-ARG BUILD_REF
-ARG BUILD_REPOSITORY
-ARG BUILD_VERSION
-LABEL \
-    io.hass.name="${BUILD_NAME}" \
-    io.hass.description="${BUILD_DESCRIPTION}" \
-    io.hass.arch="${BUILD_ARCH}" \
-    io.hass.type="addon" \
-    io.hass.version=${BUILD_VERSION} \
-    maintainer="alexbelgium (https://github.com/alexbelgium)" \
-    org.opencontainers.image.title="${BUILD_NAME}" \
-    org.opencontainers.image.description="${BUILD_DESCRIPTION}" \
-    org.opencontainers.image.vendor="Home Assistant Add-ons" \
-    org.opencontainers.image.authors="alexbelgium (https://github.com/alexbelgium)" \
-    org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.url="https://github.com/alexbelgium" \
-    org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
-    org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/main/README.md" \
-    org.opencontainers.image.created=${BUILD_DATE} \
-    org.opencontainers.image.revision=${BUILD_REF} \
-    org.opencontainers.image.version=${BUILD_VERSION}
-
-#################
-# 6 Healthcheck #
-#################
-
-ENV HEALTH_PORT="80" \
-    HEALTH_URL=""
-HEALTHCHECK \
-    --interval=5s \
-    --retries=5 \
-    --start-period=30s \
-    --timeout=25s \
-    CMD curl --fail "http://127.0.0.1:${HEALTH_PORT}${HEALTH_URL}" &>/dev/null || exit 1
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD []
